@@ -1,0 +1,4 @@
+env_file = ".env.production"
+
+[serve]
+command = "uv run --env-file .env.production uvicorn --host 0.0.0.0 --port 8000 core.asgi:application"
