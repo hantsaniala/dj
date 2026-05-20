@@ -206,3 +206,7 @@ func stringsContainsAny(s string, substrs ...string) bool {
 	}
 	return false
 }
+
+func init() {
+	rootCmd.AddCommand(initCmd)
+}
