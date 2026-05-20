@@ -7,7 +7,7 @@ build:
 	go build $(LDFLAGS) -o dj .
 
 release:
-	goreleaser release --clean
+	goreleaser release --clean --snapshot
 
 install:
 	go install $(LDFLAGS) github.com/hantsaniala/dj@latest
