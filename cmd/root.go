@@ -10,7 +10,7 @@ import (
 
 var (
 	env     string
-	Version = "0.1.1"
+	Version = "0.0.0-dev" // overridden by -ldflags at build (e.g. go build -ldflags="-X github.com/hantsaniala/dj/cmd.Version=$(git describe --tags --abbrev=0)")
 )
 
 var rootCmd = &cobra.Command{
