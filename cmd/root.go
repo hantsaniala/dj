@@ -8,11 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var env string
+var (
+	env     string
+	Version = "0.1.1"
+)
 
 var rootCmd = &cobra.Command{
-	Use:   "dj",
-	Short: "Django project CLI helper",
+	Use:     "dj",
+	Short:   "Django project CLI helper",
+	Version: Version,
 	Long: `dj is a CLI helper for Django project management.
 It wraps manage.py, docker, and common development workflows into simple commands.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,6 +33,7 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&env, "env", "e", "", "Environment profile (e.g. production)")
+	rootCmd.SetVersionTemplate("dj {{.Version}}\n")
 	cobra.OnInitialize(func() {
 		config.Init(env)
 	})
