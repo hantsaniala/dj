@@ -176,3 +176,9 @@ Override any value by setting the equivalent environment variable or `.env` key:
 go build -o dj .
 ./dj --help
 ```
+
+## Author
+
+**Hantsaniala Eléo** — [hantsaniala@gmail.com](mailto:hantsaniala@gmail.com)
+
+Distributed under the MIT License. See `LICENSE` for details.
