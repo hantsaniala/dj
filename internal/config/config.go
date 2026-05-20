@@ -48,6 +48,9 @@ func loadDotEnv(path string) {
 	}
 	defer f.Close()
 
+	env := make(map[string]string)
+	order := make([]string, 0)
+
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -61,6 +64,30 @@ func loadDotEnv(path string) {
 		key := strings.TrimSpace(parts[0])
 		val := strings.TrimSpace(parts[1])
 		val = strings.Trim(val, "'\"")
-		os.Setenv(key, val)
+		env[key] = val
+		order = append(order, key)
+	}
+
+	for round := 0; round < 5; round++ {
+		changed := false
+		for key, val := range env {
+			expanded := os.Expand(val, func(name string) string {
+				if v, ok := env[name]; ok {
+					return v
+				}
+				return os.Getenv(name)
+			})
+			if expanded != val {
+				env[key] = expanded
+				changed = true
+			}
+		}
+		if !changed {
+			break
+		}
+	}
+
+	for _, key := range order {
+		os.Setenv(key, env[key])
 	}
 }
