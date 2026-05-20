@@ -1,0 +1,18 @@
+manager = "uv run --env-file .env manage.py"
+env_file = ".env"
+
+[serve]
+command = "uv run --env-file .env uvicorn --host 0.0.0.0 --port 8000 core.asgi:application --reload"
+
+[docker]
+image = ""
+compose_file = "docker-compose.yml"
+
+[celery]
+app = "core"
+
+[git]
+branch = "develop"
+
+[dep]
+command = "uv sync"
