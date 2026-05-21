@@ -13,6 +13,9 @@ var buildCmd = &cobra.Command{
 	Short: "Build and start Docker containers",
 	Long:  `Build Docker images and start containers via "docker compose -f <file> up --build -d".`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("docker", "https://docs.docker.com/engine/install/"); err != nil {
+			return err
+		}
 		composeFile := viper.GetString("docker.compose_file")
 		if composeFile == "" {
 			return fmt.Errorf("docker.compose_file not configured")
