@@ -12,6 +12,9 @@ var formatCmd = &cobra.Command{
 	Short: "Format Python code with ruff or black",
 	Args:  cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.RequireOne("pip install ruff", "ruff", "black"); err != nil {
+			return err
+		}
 		targets := args
 		if len(targets) == 0 {
 			targets = []string{"."}
