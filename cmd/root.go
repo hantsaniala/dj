@@ -36,8 +36,7 @@ var rootCmd = &cobra.Command{
 	Long: `dj is a CLI helper for Django project management.
 It wraps manage.py, docker, and common development workflows into simple commands.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println(asciiArt)
-		fmt.Println()
+		fmt.Printf("%s %s\n\n", asciiArt, version())
 		return cmd.Help()
 	},
 }
