@@ -35,7 +35,21 @@ var rootCmd = &cobra.Command{
 	Short: "Django project CLI helper",
 	Long: `dj is a CLI helper for Django project management.
 It wraps manage.py, docker, and common development workflows into simple commands.`,
+	Args:              cobra.ArbitraryArgs,
+	SilenceErrors:     true,
+	SilenceUsage:      true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 0 {
+			ext := "dj-" + args[0]
+			if _, err := exec.LookPath(ext); err == nil {
+				c := exec.Command(ext, args[1:]...)
+				c.Stdout = os.Stdout
+				c.Stderr = os.Stderr
+				c.Stdin = os.Stdin
+				return c.Run()
+			}
+			return fmt.Errorf("unknown command: %s\nSee 'dj --help'", args[0])
+		}
 		fmt.Printf("%s %s\n\n", asciiArt, version())
 		return cmd.Help()
 	},
