@@ -10,6 +10,9 @@ var selfUpdateCmd = &cobra.Command{
 	Short: "Update dj to the latest version",
 	Long:  `Reinstall dj from source using go install. Requires Go to be installed.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("go", "https://go.dev/dl/"); err != nil {
+			return err
+		}
 		c := runner.Command("go", "install", "github.com/hantsaniala/dj@latest")
 		return runner.Run(c)
 	},
