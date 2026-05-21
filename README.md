@@ -57,7 +57,6 @@ Run `dj` with no arguments to see the help screen.
 | `dj migrate [args...]` | Run database migrations |
 | `dj mm [args...]` | Make database migrations |
 | `dj csu` | Create a superuser |
-| `dj subscribe-all-users` | Subscribe all users to notification topics |
 | `dj manage <args...>` | Run any manage.py command (escape hatch) |
 
 ### Development
@@ -151,7 +150,6 @@ Override any value by setting the equivalent environment variable or `.env` key:
 │   ├── migrate.go               # dj migrate
 │   ├── mm.go                    # dj mm
 │   ├── csu.go                   # dj csu
-│   ├── subscribe_all_users.go   # dj subscribe-all-users
 │   ├── dep.go                   # dj dep
 │   ├── pull.go                  # dj pull
 │   ├── docker.go                # dj docker (parent)
@@ -173,9 +171,11 @@ Override any value by setting the equivalent environment variable or `.env` key:
 ## Development
 
 ```bash
-go build -o dj .
+make build
 ./dj --help
 ```
+
+Version is injected at build time via `-ldflags`. Bare `go build -o dj .` reads the current git tag at runtime as fallback.
 
 ## Author
 

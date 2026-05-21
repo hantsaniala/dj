@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/hantsaniala/dj/internal/config"
 	"github.com/spf13/cobra"
@@ -10,16 +12,32 @@ import (
 
 var (
 	env     string
-	Version = "0.0.0-dev" // overridden by -ldflags at build (e.g. go build -ldflags="-X github.com/hantsaniala/dj/cmd.Version=$(git describe --tags --abbrev=0)")
+	Version = "0.0.0-dev" // overridden by -ldflags at build
 )
 
+const asciiArt = `░█▀▄░▀▀█
+░█░█░░░█
+░▀▀░░▀▀░`
+
+func version() string {
+	if Version != "0.0.0-dev" {
+		return Version
+	}
+	out, err := exec.Command("git", "describe", "--tags", "--abbrev=0").Output()
+	if err == nil {
+		return strings.TrimSpace(string(out))
+	}
+	return Version
+}
+
 var rootCmd = &cobra.Command{
-	Use:     "dj",
-	Short:   "Django project CLI helper",
-	Version: Version,
+	Use:   "dj",
+	Short: "Django project CLI helper",
 	Long: `dj is a CLI helper for Django project management.
 It wraps manage.py, docker, and common development workflows into simple commands.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println(asciiArt)
+		fmt.Println()
 		return cmd.Help()
 	},
 }
@@ -32,8 +50,9 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Version = version()
 	rootCmd.PersistentFlags().StringVarP(&env, "env", "e", "", "Environment profile (e.g. production)")
-	rootCmd.SetVersionTemplate("dj {{.Version}}\n")
+	rootCmd.SetVersionTemplate(asciiArt + " {{.Version}}\n")
 	cobra.OnInitialize(func() {
 		config.Init(env)
 	})
