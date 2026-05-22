@@ -12,6 +12,9 @@ var lintCmd = &cobra.Command{
 	Short: "Lint Python code with ruff or flake8",
 	Args:  cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.RequireOne("pip install ruff", "ruff", "flake8"); err != nil {
+			return err
+		}
 		targets := args
 		if len(targets) == 0 {
 			targets = []string{"."}

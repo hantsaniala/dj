@@ -14,6 +14,9 @@ func runManage(args ...string) error {
 		return fmt.Errorf("manager command not configured")
 	}
 	parts := strings.Fields(manager)
+	if err := runner.Require(parts[0], "curl -LsSf https://astral.sh/uv/install.sh | sh"); err != nil {
+		return err
+	}
 	allArgs := append(parts[1:], args...)
 	c := runner.Command(parts[0], allArgs...)
 	return runner.Run(c)
@@ -25,6 +28,9 @@ func runCommand(cmdKey string) error {
 		return fmt.Errorf("%s not configured", cmdKey)
 	}
 	parts := strings.Fields(cmdStr)
+	if err := runner.Require(parts[0], "curl -LsSf https://astral.sh/uv/install.sh | sh"); err != nil {
+		return err
+	}
 	c := runner.Command(parts[0], parts[1:]...)
 	return runner.Run(c)
 }

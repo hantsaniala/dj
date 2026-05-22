@@ -11,6 +11,9 @@ var pullCmd = &cobra.Command{
 	Short: "Pull latest changes from git",
 	Long:  `Pull latest changes from the configured git branch (git.branch, default: develop). Equivalent to "git pull origin <branch>".`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("git", "https://git-scm.com/downloads"); err != nil {
+			return err
+		}
 		branch := viper.GetString("git.branch")
 		c := runner.Command("git", "pull", "origin", branch)
 		return runner.Run(c)

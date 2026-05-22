@@ -13,6 +13,9 @@ var beatCmd = &cobra.Command{
 	Short: "Start Celery Beat scheduler",
 	Long:  `Start Celery Beat with django-celery-beat DatabaseScheduler for periodic tasks. Configured via celery.app in config.yaml.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("uv", "curl -LsSf https://astral.sh/uv/install.sh | sh"); err != nil {
+			return err
+		}
 		app := viper.GetString("celery.app")
 		if app == "" {
 			return fmt.Errorf("celery.app not configured")

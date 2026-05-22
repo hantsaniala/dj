@@ -14,6 +14,9 @@ var workerCmd = &cobra.Command{
 	Long:  `Start a Celery worker process. Optionally specify a queue name (default: celery). Configured via celery.app in config.yaml.`,
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("uv", "curl -LsSf https://astral.sh/uv/install.sh | sh"); err != nil {
+			return err
+		}
 		app := viper.GetString("celery.app")
 		if app == "" {
 			return fmt.Errorf("celery.app not configured")

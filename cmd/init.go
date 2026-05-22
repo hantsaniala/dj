@@ -71,6 +71,10 @@ var initCmd = &cobra.Command{
 			EnvFile:           ".env",
 		}
 
+		if port := readEnvPort(answers.EnvFile); port != "" {
+			answers.ServeCommand = strings.ReplaceAll(answers.ServeCommand, "--port 8000", "--port "+port)
+		}
+
 		qs := []*survey.Question{
 			{
 				Name: "Manager",
@@ -191,6 +195,20 @@ var initCmd = &cobra.Command{
 					fmt.Println("SECRET_KEY generated and appended to", answers.EnvFile)
 				}
 			}
+			if !stringsContainsAny(content, "APP_PORT=") {
+				var port string
+				survey.AskOne(&survey.Input{
+					Message: "Dev server port:",
+					Default: "8000",
+				}, &port)
+				f, err := os.OpenFile(answers.EnvFile, os.O_APPEND|os.O_WRONLY, 0644)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				fmt.Fprintf(f, "\nAPP_PORT=%s\n", port)
+				fmt.Printf("APP_PORT=%s appended to %s\n", port, answers.EnvFile)
+			}
 		}
 
 		fmt.Println("Done. Run 'dj --help' to see available commands.")
@@ -205,6 +223,22 @@ func stringsContainsAny(s string, substrs ...string) bool {
 		}
 	}
 	return false
+}
+
+func readEnvPort(envFile string) string {
+	data, err := os.ReadFile(envFile)
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "APP_PORT=") {
+			val := strings.TrimPrefix(line, "APP_PORT=")
+			val = strings.Trim(val, "'\"")
+			return val
+		}
+	}
+	return ""
 }
 
 func init() {

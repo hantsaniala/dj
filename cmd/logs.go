@@ -14,6 +14,9 @@ var logsCmd = &cobra.Command{
 	Long:  `Tail logs from a running Docker container. Optionally specify a service name (default: docker.image config).`,
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("docker", "https://docs.docker.com/engine/install/"); err != nil {
+			return err
+		}
 		image := viper.GetString("docker.image")
 		if image == "" {
 			return fmt.Errorf("docker.image not configured")

@@ -13,6 +13,9 @@ var cleanCmd = &cobra.Command{
 	Short: "Stop and remove Docker containers",
 	Long:  `Stop and remove Docker containers via "docker compose -f <file> down".`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := runner.Require("docker", "https://docs.docker.com/engine/install/"); err != nil {
+			return err
+		}
 		composeFile := viper.GetString("docker.compose_file")
 		if composeFile == "" {
 			return fmt.Errorf("docker.compose_file not configured")
