@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func Command(name string, args ...string) *exec.Cmd {
@@ -16,6 +17,7 @@ func Run(cmd *exec.Cmd) error {
 	cmd.Stdin = os.Stdin
 	err := cmd.Run()
 	if err != nil {
+		time.Sleep(50 * time.Millisecond)
 		fmt.Fprintln(os.Stderr)
 	}
 	return err
